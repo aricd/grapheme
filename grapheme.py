@@ -14,23 +14,21 @@ Background = (50, 50, 50)
 TextBackground = (0, 0, 0)
 font_base_size = 540
 font_scale = 1.3
-TARGET_FPS = 240
+TARGET_FPS = 120
 
 
-# traverse root directory, and list directories as dirs and files as files
+# return a folder name to list of .mp3 map for sound resources
 def get_sound_paths(path) -> dict[str, List[str]]:
     result = {}
     for root, dirs, files in os.walk(path):
         for file in files:
             dirname = os.path.basename(root)
             fullpath = os.path.abspath(os.path.join(root, file))
-            # print(dirname, ": ", fullpath)
             if (file.count(".mp3") > 0):
                 if (result.get(dirname)):
                     result[dirname].append(fullpath)
                 else:
                     result[dirname] = [fullpath]
-    # print(result)
     return result
 
 
@@ -46,7 +44,7 @@ class LetterStore:
     soundList: list[pygame.mixer.Sound]
 
     def __init__(self, text: str, sound_paths: dict[str, List[str]], fontSize=font_base_size, textColor=White, textBackgroundColor=TextBackground, fontFile='freesansbold.ttf'):
-        self.text = str.upper(text)  # + " " + text
+        self.text = str.upper(text) + " " + text
         self.fontSetting = pygame.font.Font(fontFile, fontSize)
         self.fontSettingBg = pygame.font.Font(fontFile, fontSize)
         self.surface = self.fontSetting.render(self.text, True, textColor)
@@ -67,7 +65,6 @@ class LetterStore:
         textRect = self.surface.get_rect()
         textRect.center = tuple(position)
         surface.blit(self.surface, textRect)
-        # print(self.soundPaths)
 
     def play(self):
         if len(self.soundList) > 0:
@@ -110,7 +107,6 @@ def create_letters(sound_paths: dict[str, List[str]]):
     }
 
 
-# def draw_window(display_surface: pygame.Surface, key_queue: collections.deque, letters):
 def draw_window(display_surface: pygame.Surface, current_key: int, letters):
     display_surface.fill(Background)
     if (current_key >= 0):
@@ -153,7 +149,7 @@ def main():
     letters = create_letters(sound_paths)
     display_surface = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Letter Game")
-    current_key = -1
+    current_key : int = -1
 
     run = True
     clock = pygame.time.Clock()
@@ -170,7 +166,6 @@ def main():
 
         if no_press and len(key_queue) > 0:
             letters[key_queue[0]].play()
-        # draw_window(display_surface, key_queue, letters)
         draw_window(display_surface, current_key, letters)
 
         no_press = len(key_queue) == 0
