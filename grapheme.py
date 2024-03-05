@@ -10,8 +10,8 @@ White = (255, 255, 255)
 Black = (0, 0, 0)
 Blue = (10, 10, 100)
 Green = (10, 200, 10)
-Background = (50, 50, 50)
-TextBackground = (0, 0, 0)
+Background = (70, 70, 70)
+TextBackground = (40, 40, 40)
 font_base_size = 540
 font_scale = 1.3
 TARGET_FPS = 120
@@ -49,13 +49,26 @@ class LetterStore:
         self.fontSettingBg = pygame.font.Font(fontFile, fontSize)
         self.surface = self.fontSetting.render(self.text, True, textColor)
         self.surfaceBg = self.fontSettingBg.render(self.text, True, textBackgroundColor)
+        
+        dist = 3.5 # 2
+        sqrtdist = 1.9 # 1.414213562
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(dist,0))
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(-dist,0))
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(0,dist))
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(0,-dist))
+
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(sqrtdist,sqrtdist))
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(-sqrtdist,sqrtdist))
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(sqrtdist,-sqrtdist))
+        self.surfaceBg.blit(self.fontSettingBg.render(self.text, True, textBackgroundColor),(-sqrtdist,-sqrtdist))
+        
         self.soundPaths = sound_paths[text]
         self.soundList = []
         print(text)
         for path in self.soundPaths:
             print("loading sound:", path)
             self.soundList.append(pygame.mixer.Sound(path))
-        self.textBgOffset = [6, 6]
+        self.textBgOffset = [0, 0]
 
     def blit(self, surface: pygame.Surface, position: List[int]):
         textRectBg = self.surfaceBg.get_rect()
